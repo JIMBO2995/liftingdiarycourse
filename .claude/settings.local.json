@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:clerk.com)",
+      "Bash(npm install:*)",
+      "Bash(npm run lint)",
+      "Bash(npx drizzle-kit push)"
+    ]
+  }
+}
