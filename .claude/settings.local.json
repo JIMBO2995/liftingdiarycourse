@@ -5,7 +5,9 @@
       "Bash(npm install:*)",
       "Bash(npm run lint)",
       "Bash(npx drizzle-kit push)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
