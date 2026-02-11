@@ -12,7 +12,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+
 - /docs/ui.md
+- /docs/data-fetching.md 
 ## Architecture
 
 This is a Next.js 16 project using the App Router pattern with TypeScript.

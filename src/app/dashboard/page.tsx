@@ -1,88 +1,58 @@
-"use client";
-
-import { useState } from "react";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { getWorkoutsByDate } from "@/data/workouts";
+import { DatePicker } from "./date-picker";
 
-// Mock data for UI display
-const mockWorkouts = [
-  {
-    id: "1",
-    name: "Bench Press",
-    sets: [
-      { reps: 10, weight: 135 },
-      { reps: 8, weight: 155 },
-      { reps: 6, weight: 175 },
-    ],
-  },
-  {
-    id: "2",
-    name: "Squat",
-    sets: [
-      { reps: 8, weight: 185 },
-      { reps: 8, weight: 205 },
-      { reps: 6, weight: 225 },
-    ],
-  },
-  {
-    id: "3",
-    name: "Deadlift",
-    sets: [
-      { reps: 5, weight: 225 },
-      { reps: 5, weight: 275 },
-      { reps: 3, weight: 315 },
-    ],
-  },
-];
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ date?: string }>;
+}) {
+  const { userId } = await auth();
 
-export default function DashboardPage() {
-  const [date, setDate] = useState<Date>(new Date());
+  if (!userId) {
+    redirect("/sign-in");
+  }
+
+  const params = await searchParams;
+  const selectedDate = params.date || format(new Date(), "yyyy-MM-dd");
+  const workouts = await getWorkoutsByDate(userId, selectedDate);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <div className="mb-8">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {format(date, "do MMM yyyy")}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(newDate) => newDate && setDate(newDate)}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <DatePicker selectedDate={selectedDate} />
       </div>
 
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">Workouts</h2>
 
-        {mockWorkouts.length === 0 ? (
-          <p className="text-muted-foreground">No workouts logged for this date.</p>
+        {workouts.length === 0 ? (
+          <p className="text-muted-foreground">
+            No workouts logged for this date.
+          </p>
         ) : (
           <div className="space-y-4">
-            {mockWorkouts.map((workout) => (
-              <div
-                key={workout.id}
-                className="rounded-lg border p-4"
-              >
-                <h3 className="mb-2 font-medium">{workout.name}</h3>
-                <div className="space-y-1 text-sm text-muted-foreground">
-                  {workout.sets.map((set, index) => (
-                    <div key={index}>
-                      Set {index + 1}: {set.reps} reps @ {set.weight} lbs
+            {workouts.map((workout) => (
+              <div key={workout.id} className="rounded-lg border p-4">
+                {workout.name && (
+                  <h3 className="mb-3 font-semibold">{workout.name}</h3>
+                )}
+                <div className="space-y-4">
+                  {workout.exercises.map((exercise) => (
+                    <div key={exercise.id}>
+                      <h4 className="mb-2 font-medium">{exercise.name}</h4>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        {exercise.sets.map((set) => (
+                          <div key={set.id}>
+                            Set {set.setNumber}:{" "}
+                            {set.reps && `${set.reps} reps`}
+                            {set.weight && ` @ ${set.weight} lbs`}
+                            {set.rpe && ` (RPE ${set.rpe})`}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
