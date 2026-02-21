@@ -4,7 +4,9 @@
       "WebFetch(domain:clerk.com)",
       "Bash(npm install:*)",
       "Bash(npm run lint)",
-      "Bash(npx drizzle-kit push)"
+      "Bash(npx drizzle-kit push)",
+      "Bash(git pull:*)",
+      "Bash(git merge:*)"
     ]
   }
 }
