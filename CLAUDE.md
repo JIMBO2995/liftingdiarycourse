@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Important: Documentation First
+
+**ALWAYS refer to the relevant documentation files in the `/docs` directory before generating any code.** The docs contain up-to-date API references, patterns, and examples for the technologies used in this project. Check for relevant docs files first to ensure generated code follows current best practices and correct syntax.
+
 ## Commands
 
 - `npm run dev` - Start development server at http://localhost:3000
@@ -9,6 +13,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 
+- /docs/ui.md
+- /docs/data-fetching.md 
 ## Architecture
 
 This is a Next.js 16 project using the App Router pattern with TypeScript.
